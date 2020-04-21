@@ -1,0 +1,156 @@
+openapi: "3.0.1"
+info:
+  title: "Fastr MREP"
+  description: "Report API for Measurement Reports"
+  version: "0.1.0"
+
+tags:
+- name: "mrep"
+  description: "Measurment Report"
+paths:
+  /rrcMrep:
+    post:
+      tags:
+      - "sMRep"
+      summary: "Simple Measurment Report"
+      operationId: "sRrcMRep"
+      description: ""
+      requestBody:
+        description: "Measuement Report"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SMRep'
+        required: true
+      responses:
+        200:
+          description: "Sucessful"
+          content: {}
+        405:
+          description: "Invalid input"
+          content: {}
+components:
+  schemas:
+    SRrcMRep:
+      type: "object"
+      properties:
+        reportingNode:
+          type: "string"
+        reportTs:
+          type: integer
+          format: int64
+          description: "Time when Report is generated. Epoch milliseconds"
+        msisdn:
+          type: "string"
+        imsi:
+          type: "string"
+        imei:
+          type: "string"
+        imeisv:
+          type: "string"
+        report:
+          oneOf:
+            $ref: '#/components/schemas/LteSRrcMRep'
+            $ref: '#/components/schemas/LteSTaMRep'
+    LteSRrcMRep:
+      type: "object"
+      description : "Simple LTE RRC Measuement Report"
+      properties: 
+        servingEnbId:
+          type: "integer"
+          description: "Serving eNodeB ID"
+        servingCI:
+          type: "integer"
+          description: "Serving Cell ID"
+        mme_ue_s1ap_id:
+          type: integer
+          description: "MME Session ID" 
+        enb_ue_s1ap_id:
+          type: integer
+          description: "eNodeB Session ID" 
+        measurements:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/LteSMrrcMRepMeasA'
+
+    LteSTaMRep:
+      type: "object"
+      description: "Simple TA Measurement Report
+      properties: 
+        servingEnbId:
+          type: "integer"
+          description: "Serving eNodeB ID"
+        servingCI:
+          type: "integer"
+          description: "Serving Cell ID"
+        eventTs:
+          type: integer
+          format: int64
+          description: "Epoch milliseconds"
+        ta1 :
+          type : integer
+          description : "TA1 value"
+        ta2 :
+          type : integer
+          description : "TA2 value"
+    LteSMrrcRepMeasA:
+      type: object
+      description: "LTE RRC Measurement Report, event type Ax"
+      properties:
+        measObjectId :
+          type: integer
+          description : "Measured Object ID from RRC Measurment Report type Ax"
+        repEventType :
+          type: string
+          enum: [A1, A2, A3, A4, A5, A6]
+          description: "Event type (Only Type A events, no inter-RAT, no CSI)"
+        measEarfcn :
+          type: "integer"
+          description: "Measured Cell Earfcn"
+        measPci:
+          type: "integer"
+          description: "Measured Cell PCI"
+        rsrp:
+          type: integer
+          description: "Measured Cell rsrp"
+        rsrq:
+          type: integer
+          description: "Measured Cell rsrq"
+        measCellId :
+          $ref: '#/components/schemas/LteCellId'
+          description: "Measured Cell ID"
+
+
+    LteCellId:
+      type: object
+      properties:
+        mcc:
+          type: string
+        mnc:
+          type: string
+        enodebid:
+          type: integer
+        ci:
+          type: integer
+    UmtsCellId:
+      type: object
+      properties:
+        mcc:
+          type: string
+        mnc:
+          type: string
+        rncid:
+          type: integer
+        ci:
+          type: integer
+    GsmCellId:
+      type: object
+      properties:
+        mcc:
+          type: string
+        mnc:
+          type: string
+        lac:
+          type: integer
+        cid:
+          type: integer
