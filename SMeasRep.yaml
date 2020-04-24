@@ -8,12 +8,12 @@ tags:
 - name: "mrep"
   description: "Measurment Report"
 paths:
-  /rrcMrep:
+  /sMrep:
     post:
       tags:
-      - "sMRep"
+      - "smRep"
       summary: "Simple Measurment Report"
-      operationId: "sRrcMRep"
+      operationId: "smRep"
       description: ""
       requestBody:
         description: "Measuement Report"
@@ -31,7 +31,7 @@ paths:
           content: {}
 components:
   schemas:
-    SRrcMRep:
+    SMRep:
       type: "object"
       properties:
         reportingNode:
@@ -42,16 +42,20 @@ components:
           description: "Time when Report is generated. Epoch milliseconds"
         msisdn:
           type: "string"
+          description : "MSISDN in E164 international format. Included if available"
         imsi:
           type: "string"
+          description : "MSISDN in E212 format. Included if available"          
         imei:
           type: "string"
+          description : "IMEI. Included if available. Note : Only one of imei and imeisv is included"          
         imeisv:
           type: "string"
+          description : "IMEISV. Included if available. Note : Only one of imei and imeisv is included"          
         report:
           oneOf:
-            $ref: '#/components/schemas/LteSRrcMRep'
-            $ref: '#/components/schemas/LteSTaMRep'
+            - $ref: '#/components/schemas/LteSRrcMRep'
+            - $ref: '#/components/schemas/LteSTaMRep'
     LteSRrcMRep:
       type: "object"
       description : "Simple LTE RRC Measuement Report"
@@ -75,7 +79,7 @@ components:
 
     LteSTaMRep:
       type: "object"
-      description: "Simple TA Measurement Report
+      description: "Simple TA Measurement Report"
       properties: 
         servingEnbId:
           type: "integer"
@@ -93,7 +97,7 @@ components:
         ta2 :
           type : integer
           description : "TA2 value"
-    LteSMrrcRepMeasA:
+    LteSMrrcMRepMeasA:
       type: object
       description: "LTE RRC Measurement Report, event type Ax"
       properties:
